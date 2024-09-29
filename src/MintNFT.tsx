@@ -23,31 +23,37 @@ function MintNFT() {
     }}>Mint NFT</button>
   </div>;
 
-  function mint() {
-    const tx = new Transaction();
+ async function mint() {
+   try {
+     const tx = new Transaction();
 
-    tx.moveCall({
-      arguments: [
-        tx.pure.string("Pug"),
-        tx.pure.string("Playful, Fearless, Mythical"),
-        tx.pure.string(
-          "https://peach-added-rooster-898.mypinata.cloud/ipfs/QmYx6GsYAKnNzZ9A6NvEKV9nf1VaDzJrqDR23Y8YSkebLU"
-        ),
-      ],
-      target: `${mintNftPackage}::sui_nft::mint`,
-    });
+     tx.moveCall({
+       target: `${mintNftPackage}::sui_nft::mint`,
+       arguments: [
+         tx.pure.string("Pug"),
+         tx.pure.string("Playful, Fearless, Mythical"),
+         tx.pure.string(
+           "https://peach-added-rooster-898.mypinata.cloud/ipfs/QmYx6GsYAKnNzZ9A6NvEKV9nf1VaDzJrqDR23Y8YSkebLU"
+         ),
+       ],
+     });
 
+     // Set an explicit gas budget
+     tx.setGasBudget(10000000);
 
-    signAndExecute(
-      {
-        transaction: tx,
-      },
-      {
-        onSuccess: () => {
-         window.alert("Minted successfully ✅");
-        },
-      },);
-  }
+     console.log("Transaction block created:", tx);
+
+     const result = signAndExecute({
+       transaction: tx,
+     });
+
+     console.log("Transaction result:", result);
+     window.alert("Minted successfully ✅");
+   } catch (error) {
+     console.error("Error creating or executing transaction:", error);
+     window.alert(`Error minting NFT: ${error}`);
+   }
+ }
 }
 
 export default MintNFT;
