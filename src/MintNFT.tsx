@@ -23,36 +23,33 @@ function MintNFT() {
     }}>Mint NFT</button>
   </div>;
 
- async function mint() {
-   try {
+ function mint() {
+   
      const tx = new Transaction();
 
      tx.moveCall({
-       target: `${mintNftPackage}::sui_nft::mint`,
+       target: `${mintNftPackage}::my_hero::mint`,
        arguments: [
          tx.pure.string("Pug"),
-         tx.pure.string("Playful, Fearless, Mythical"),
          tx.pure.string(
-           "https://peach-added-rooster-898.mypinata.cloud/ipfs/QmYx6GsYAKnNzZ9A6NvEKV9nf1VaDzJrqDR23Y8YSkebLU"
+           "https://ipfs.io/ipfs/QmYx6GsYAKnNzZ9A6NvEKV9nf1VaDzJrqDR23Y8YSkebLU"
          ),
        ],
      });
 
-     // Set an explicit gas budget
      tx.setGasBudget(10000000);
 
-     console.log("Transaction block created:", tx);
 
-     const result = signAndExecute({
+     signAndExecute({
        transaction: tx,
-     });
+     }, {
+        onSuccess: async() => {
+          console.log("Minted successfully");
+        },
+      });
 
-     console.log("Transaction result:", result);
-     window.alert("Minted successfully ✅");
-   } catch (error) {
-     console.error("Error creating or executing transaction:", error);
-     window.alert(`Error minting NFT: ${error}`);
-   }
+ 
+   
  }
 }
 
